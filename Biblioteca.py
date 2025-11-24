@@ -288,6 +288,12 @@ class Biblioteca:
     def eliminar_libro(self, titulo):
         for libro in self.pila_libros:
             if libro['titulo'].lower() == titulo.lower():
+
+                for p in self.prestamos:
+                    if p['titulo'].lower() == titulo.lower():
+                        print(f"No se puede eliminar '{titulo}' porque está prestado.")
+                        return
+                    
                 self.pila_libros.remove(libro)
                 self.arbol_libros.eliminar(titulo)
                 # Eliminar aristas asociadas al libro
