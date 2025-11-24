@@ -193,6 +193,10 @@ class Biblioteca:
         self.conn.commit()
 
     def registrar_libro(self, isbn, titulo, autor, editorial, año, cantidad, categoria):
+        for l in self.pila_libros:
+            if l['titulo'].lower() == titulo.lower():
+                print(f"El libro '{titulo}' ya está registrado.")
+                return    
         c = self.conn.cursor()
         c.execute("INSERT OR IGNORE INTO editoriales (nombre) VALUES (?)", (editorial,))
         c.execute("INSERT OR IGNORE INTO categorias (nombre) VALUES (?)", (categoria,))
