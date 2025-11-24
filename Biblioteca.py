@@ -193,6 +193,10 @@ class Biblioteca:
         self.conn.commit()
 
     def registrar_libro(self, isbn, titulo, autor, editorial, año, cantidad, categoria):
+        for l in self.pila_libros:
+            if l['titulo'].lower() == titulo.lower():
+                print(f"El libro '{titulo}' ya está registrado.")
+                return    
         c = self.conn.cursor()
         c.execute("INSERT OR IGNORE INTO editoriales (nombre) VALUES (?)", (editorial,))
         c.execute("INSERT OR IGNORE INTO categorias (nombre) VALUES (?)", (categoria,))
@@ -223,6 +227,10 @@ class Biblioteca:
         if not usuario:
             print(f"Usuario con ID '{id_usuario}' no existe.")
             return
+        for p in self.prestamos:
+            if p['id_usuario'] == id_usuario and p['titulo'].lower() == titulo.lower():
+                print(f"El usuario {id_usuario} ya tiene prestado el libro '{titulo}'.")
+                return
         for libro in self.pila_libros:
             if libro['titulo'].lower() == titulo.lower():
                 if libro['cantidad'] > 0:
@@ -280,6 +288,12 @@ class Biblioteca:
     def eliminar_libro(self, titulo):
         for libro in self.pila_libros:
             if libro['titulo'].lower() == titulo.lower():
+
+                for p in self.prestamos:
+                    if p['titulo'].lower() == titulo.lower():
+                        print(f"No se puede eliminar '{titulo}' porque está prestado.")
+                        return
+                    
                 self.pila_libros.remove(libro)
                 self.arbol_libros.eliminar(titulo)
                 # Eliminar aristas asociadas al libro
