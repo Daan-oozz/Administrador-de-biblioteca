@@ -227,6 +227,10 @@ class Biblioteca:
         if not usuario:
             print(f"Usuario con ID '{id_usuario}' no existe.")
             return
+        for p in self.prestamos:
+            if p['id_usuario'] == id_usuario and p['titulo'].lower() == titulo.lower():
+                print(f"El usuario {id_usuario} ya tiene prestado el libro '{titulo}'.")
+                return
         for libro in self.pila_libros:
             if libro['titulo'].lower() == titulo.lower():
                 if libro['cantidad'] > 0:
