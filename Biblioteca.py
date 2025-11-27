@@ -146,6 +146,8 @@ class Biblioteca:
                                       año=año, cantidad=cantidad, categoria=categoria)
             self.grafo.agregar_nodo(titulo)
 
+
+
         # Cargar usuarios
         c.execute("SELECT id_usuario, nombre FROM usuarios")
         for row in c.fetchall():
@@ -285,6 +287,15 @@ class Biblioteca:
         else:
             print(f"El libro '{titulo}' no está en la biblioteca.")
 
+    def buscar_por_autor(self, autor):
+        resultados = [l for l in self.pila_libros if l['autor'].lower() == autor.lower()]
+        if resultados:
+            print(f"Libros encontrados por el autor '{autor}':")
+            for libro in resultados:
+                print(f"- {libro['titulo']} ({libro['isbn']}) por {libro['autor']}, {libro['editorial']}, {libro['año']}, Categoría: {libro['categoria']}. Disponibles: {libro['cantidad']}.")
+        else:
+            print(f"No se encontraron libros del autor '{autor}'.")
+
     def eliminar_libro(self, titulo):
         for libro in self.pila_libros:
             if libro['titulo'].lower() == titulo.lower():
@@ -324,9 +335,10 @@ def main():
         print("4. Devolver libro")
         print("5. Mostrar inventario")
         print("6. Buscar libro (usando árbol)")
-        print("7. Eliminar libro")
-        print("8. Buscar recomendaciones (usando grafo)")
-        print("9. Salir")
+        print("7. Buscar por autor")
+        print("8. Eliminar libro")
+        print("9. Buscar recomendaciones (usando grafo)")
+        print("10. Salir")
         opcion = input("Elige una opción: ")
 
         if opcion == "1":
@@ -362,12 +374,15 @@ def main():
             titulo = input("Ingresa el título del libro a buscar: ")
             biblioteca.buscar_libro_arbol(titulo)
         elif opcion == "7":
+            autor = input("Ingresa el autor del libro a buscar: ")
+            biblioteca.buscar_por_autor(autor)
+        elif opcion == "8":
             titulo = input("Ingresa el título del libro a eliminar: ")
             biblioteca.eliminar_libro(titulo)
-        elif opcion == "8":
+        elif opcion == "9":
             id_usuario = input("Ingresa el ID del usuario para recomendaciones: ")
             biblioteca.recomendar_libros(id_usuario)
-        elif opcion == "9":
+        elif opcion == "10":
             print("Saliendo del programa...")
             biblioteca.conn.close()
             break
