@@ -1,4 +1,4 @@
-#Implementación de historias de usuario - Alejandro
+#Implementación de historias de usuario - carlos
 
 import sqlite3
 import datetime
@@ -146,6 +146,8 @@ class Biblioteca:
                                       año=año, cantidad=cantidad, categoria=categoria)
             self.grafo.agregar_nodo(titulo)
 
+
+
         # Cargar usuarios
         c.execute("SELECT id_usuario, nombre FROM usuarios")
         for row in c.fetchall():
@@ -262,6 +264,9 @@ class Biblioteca:
                             libro['cantidad'] += 1
                             self.prestamos.remove(prestamo)
                             self.grafo.eliminar_arista(id_usuario, titulo)
+                            print(f"Libro '{titulo}' devuelto correctamente el {datetime.datetime.now().strftime('%Y-%m-%d %H:%M')}.")
+
+        
                             self.guardar_datos()
                             print(f"Libro '{titulo}' devuelto por usuario {id_usuario}. Ahora hay {libro['cantidad']}/{libro['cantidad_inicial']}.")
                             return
@@ -284,6 +289,15 @@ class Biblioteca:
             print(f"Libro encontrado: '{nodo.clave}' ({nodo.datos['isbn']}) por {nodo.datos['autor']}, {nodo.datos['editorial']}, {nodo.datos['año']}, Categoría: {nodo.datos['categoria']}. Disponibles: {nodo.datos['cantidad']}.")
         else:
             print(f"El libro '{titulo}' no está en la biblioteca.")
+
+    def buscar_por_autor(self, autor):
+        resultados = [l for l in self.pila_libros if l['autor'].lower() == autor.lower()]
+        if resultados:
+            print(f"Libros encontrados por el autor '{autor}':")
+            for libro in resultados:
+                print(f"- {libro['titulo']} ({libro['isbn']}) por {libro['autor']}, {libro['editorial']}, {libro['año']}, Categoría: {libro['categoria']}. Disponibles: {libro['cantidad']}.")
+        else:
+            print(f"No se encontraron libros del autor '{autor}'.")
 
     def eliminar_libro(self, titulo):
         for libro in self.pila_libros:
@@ -324,9 +338,10 @@ def main():
         print("4. Devolver libro")
         print("5. Mostrar inventario")
         print("6. Buscar libro (usando árbol)")
-        print("7. Eliminar libro")
-        print("8. Buscar recomendaciones (usando grafo)")
-        print("9. Salir")
+        print("7. Buscar por autor")
+        print("8. Eliminar libro")
+        print("9. Buscar recomendaciones (usando grafo)")
+        print("10. Salir")
         opcion = input("Elige una opción: ")
 
         if opcion == "1":
@@ -362,12 +377,15 @@ def main():
             titulo = input("Ingresa el título del libro a buscar: ")
             biblioteca.buscar_libro_arbol(titulo)
         elif opcion == "7":
+            autor = input("Ingresa el autor del libro a buscar: ")
+            biblioteca.buscar_por_autor(autor)
+        elif opcion == "8":
             titulo = input("Ingresa el título del libro a eliminar: ")
             biblioteca.eliminar_libro(titulo)
-        elif opcion == "8":
+        elif opcion == "9":
             id_usuario = input("Ingresa el ID del usuario para recomendaciones: ")
             biblioteca.recomendar_libros(id_usuario)
-        elif opcion == "9":
+        elif opcion == "10":
             print("Saliendo del programa...")
             biblioteca.conn.close()
             break
@@ -375,4 +393,5 @@ def main():
             print("Opción no válida, intenta otra vez.")
 
 if __name__ == "__main__":
+
     main()
