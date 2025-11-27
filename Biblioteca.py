@@ -264,6 +264,9 @@ class Biblioteca:
                             libro['cantidad'] += 1
                             self.prestamos.remove(prestamo)
                             self.grafo.eliminar_arista(id_usuario, titulo)
+                            print(f"Libro '{titulo}' devuelto correctamente el {datetime.datetime.now().strftime('%Y-%m-%d %H:%M')}.")
+
+        
                             self.guardar_datos()
                             print(f"Libro '{titulo}' devuelto por usuario {id_usuario}. Ahora hay {libro['cantidad']}/{libro['cantidad_inicial']}.")
                             return
