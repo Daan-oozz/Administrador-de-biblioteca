@@ -1,4 +1,4 @@
-#Implementación de historias de usuario - Alejandro
+#Implementación de historias de usuario - carlos
 
 import sqlite3
 import datetime
@@ -393,4 +393,5 @@ def main():
             print("Opción no válida, intenta otra vez.")
 
 if __name__ == "__main__":
+
     main()
